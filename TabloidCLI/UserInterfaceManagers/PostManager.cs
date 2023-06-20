@@ -132,15 +132,15 @@ namespace TabloidCLI.UserInterfaceManagers
             int selectedAuthorId = Convert.ToInt32(Console.ReadLine()) - 1;
             post.Author = authors[selectedAuthorId];
 
-            Console.WriteLine();
-            Console.WriteLine("Select Blog:");
-            List<Blog> blogs = _blogRepository.GetAll();
-            for (int i = 0; i < blogs.Count; i++)
-            {
-                Console.WriteLine($"{i + 1} - {blogs[i].Title}");
-            }
-            int selectedBlogIndex = Convert.ToInt32(Console.ReadLine()) - 1;
-            post.Blog = blogs[selectedBlogIndex];
+            //Console.WriteLine();
+            //Console.WriteLine("Select Blog:");
+            //List<Blog> blogs = _blogRepository.GetAll();
+            //for (int i = 0; i < blogs.Count; i++)
+            //{
+            //    Console.WriteLine($"{i + 1} - {blogs[i].Title}");
+            //}
+            //int selectedBlogIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+            //post.Blog = blogs[selectedBlogIndex];
 
             _postRepository.Insert(post);
 
