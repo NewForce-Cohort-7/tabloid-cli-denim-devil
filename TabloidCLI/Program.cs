@@ -1,5 +1,7 @@
 ﻿using TabloidCLI.UserInterfaceManagers;
 
+using TabloidCLI.Repositories;
+
 namespace TabloidCLI
 {
     class Program
