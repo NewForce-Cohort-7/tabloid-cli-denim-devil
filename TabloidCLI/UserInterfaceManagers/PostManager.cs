@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TabloidCLI.Models;
+using TabloidCLI.Repositories;
 
 namespace TabloidCLI.UserInterfaceManagers
 {
@@ -9,7 +10,7 @@ namespace TabloidCLI.UserInterfaceManagers
         private readonly IUserInterfaceManager _parentUI;
         private PostRepository _postRepository;
         private AuthorRepository _authorRepository;
-       // private BlogRepository _blogRepository;
+        private BlogRepository _blogRepository;
         private string _connectionString;
 
         public PostManager(IUserInterfaceManager parentUI, string connectionString)
@@ -17,7 +18,7 @@ namespace TabloidCLI.UserInterfaceManagers
             _parentUI = parentUI;
             _postRepository = new PostRepository(connectionString);
             _authorRepository = new AuthorRepository(connectionString);
-           // _blogRepository = new BlogRepository(connectionString);
+            _blogRepository = new BlogRepository(connectionString);
             _connectionString = connectionString;
         }
 
@@ -36,10 +37,10 @@ namespace TabloidCLI.UserInterfaceManagers
             switch (choice)
             {
                 case "1":
-                    PostList();
+                    List();
                     return this;
                 case "2":
-                    Post post = PostChoose();
+                    Post post = Choose();
                     if (post == null)
                     {
                         return this;
@@ -65,18 +66,20 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
-        private void PostList()
+        private void List()
         {
+            Console.WriteLine();
             List<Post> posts = _postRepository.GetAll();
             foreach (Post post in posts)
             {
-                Console.WriteLine(post);
+                Console.WriteLine(post.Title);
             }
+            Console.WriteLine();
         }
 
 
 
-        private Post PostChoose(string prompt = null)
+        private Post Choose(string prompt = null)
         {
             if (prompt == null)
             {
@@ -109,6 +112,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Add()
         {
+            Console.WriteLine();
             Console.WriteLine("New Post");
             Post post = new Post();
 
@@ -132,20 +136,21 @@ namespace TabloidCLI.UserInterfaceManagers
             int selectedAuthorId = Convert.ToInt32(Console.ReadLine()) - 1;
             post.Author = authors[selectedAuthorId];
 
-            //Console.WriteLine();
-            //Console.WriteLine("Select Blog:");
-            //List<Blog> blogs = _blogRepository.GetAll();
-            //for (int i = 0; i < blogs.Count; i++)
-            //{
-            //    Console.WriteLine($"{i + 1} - {blogs[i].Title}");
-            //}
-            //int selectedBlogIndex = Convert.ToInt32(Console.ReadLine()) - 1;
-            //post.Blog = blogs[selectedBlogIndex];
+            Console.WriteLine();
+            Console.WriteLine("Select Blog:");
+            List<Blog> blogs = _blogRepository.GetAll();
+            for (int i = 0; i < blogs.Count; i++)
+            {
+                Console.WriteLine($"{i + 1} - {blogs[i].Title}");
+            }
+            int selectedBlogIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+            post.Blog = blogs[selectedBlogIndex];
 
             _postRepository.Insert(post);
 
             Console.WriteLine();
             Console.WriteLine("Post added successfully!");
+            Console.WriteLine();
         }
 
         private void Edit()
@@ -155,7 +160,15 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Remove()
         {
-            throw new NotImplementedException();
+            Console.WriteLine();
+            Post postToDelete = Choose("Which post would you like to remove?");
+            if (postToDelete != null)
+            {
+                _postRepository.Delete(postToDelete.Id);
+            }
+            Console.WriteLine();
+            Console.WriteLine("Post deleted successfully!");
+            Console.WriteLine();
         }
     }
 }
