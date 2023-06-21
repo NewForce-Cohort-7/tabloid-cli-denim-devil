@@ -7,7 +7,11 @@ namespace TabloidCLI.Repositories
 {
     public class NoteRepository : DatabaseConnector, IRepository<Note>
     {
-        public NoteRepository(string connectionString) : base(connectionString) { }
+        private int _postId;
+        public NoteRepository(int postId, string connectionString) : base(connectionString) 
+        { 
+            _postId = postId;
+        }
 
         public List<Note> GetAll()
         {
@@ -16,9 +20,8 @@ namespace TabloidCLI.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT n.Id, n.Title, n.Content, n.CreateDateTime, p.Title AS PostTitle
-                                    FROM Note n
-                                    JOIN Post p ON n.PostId = p.Id;";
+                    cmd.CommandText = @"SELECT Id, Title, Content, CreateDateTime FROM Note WHERE PostId = @postId";
+                    cmd.Parameters.AddWithValue("@postId", _postId);                
                     List<Note> notes = new List<Note>();
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -30,10 +33,6 @@ namespace TabloidCLI.Repositories
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             Content = reader.GetString(reader.GetOrdinal("Content")),
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                            Post = new Post()
-                            {
-                                Title = reader.GetString(reader.GetOrdinal("PostTitle"))
-                            }
                         };
                         notes.Add(note);
                     }
@@ -44,45 +43,45 @@ namespace TabloidCLI.Repositories
             }
         }
 
-        public Note Get(int id)
-        {
-            using (SqlConnection conn = Connection)
-            {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"SELECT n.Id, n.Title, n.Content, n.CreateDateTime, p.Title AS PostTitle
-                                        FROM Note n
-                                        JOIN Post p ON n.PostId = p.Id;
-                                        ";
-                    cmd.Parameters.AddWithValue("@id", id);
+        public Note Get(int id) { return null; }
+        //{
+            //using (SqlConnection conn = Connection)
+            //{
+            //    conn.Open();
+            //    using (SqlCommand cmd = conn.CreateCommand())
+            //    {
+            //        cmd.CommandText = @"SELECT n.Id, n.Title, n.Content, n.CreateDateTime, p.Title AS PostTitle
+            //                            FROM Note n
+            //                            JOIN Post p ON n.PostId = p.Id;
+            //                            ";
+            //        cmd.Parameters.AddWithValue("@id", id);
 
-                    Note note = null;
+            //        Note note = null;
 
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        if (note == null)
-                        {
-                            note = new Note()
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Content = reader.GetString(reader.GetOrdinal("Content")),
-                                CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                                Post = new Post()
-                                {
-                                    Title = reader.GetString(reader.GetOrdinal("PostTitle"))
-                                }
-                            };
-                        }
-                    }
+            //        SqlDataReader reader = cmd.ExecuteReader();
+            //        while (reader.Read())
+            //        {
+            //            if (note == null)
+            //            {
+            //                note = new Note()
+            //                {
+            //                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+            //                    Title = reader.GetString(reader.GetOrdinal("Title")),
+            //                    Content = reader.GetString(reader.GetOrdinal("Content")),
+            //                    CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+            //                    Post = new Post()
+            //                    {
+            //                        Title = reader.GetString(reader.GetOrdinal("PostTitle"))
+            //                    }
+            //                };
+            //            }
+            //        }
 
-                    reader.Close();
-                    return note;
-                }
-            }
-        }
+            //        reader.Close();
+            //        return note;
+            //    }
+            //}
+        //}
 
         public void Insert(Note note)
         {
@@ -95,7 +94,7 @@ namespace TabloidCLI.Repositories
                                                     VALUES (@title, @content, @postId, @createDateTime)";
                     cmd.Parameters.AddWithValue("@title", note.Title);
                     cmd.Parameters.AddWithValue("@content", note.Content);
-                    cmd.Parameters.AddWithValue("@postId", 1);
+                    cmd.Parameters.AddWithValue("@postId", _postId);
                     cmd.Parameters.AddWithValue("@createDateTime", DateTime.Now);
 
                     cmd.ExecuteNonQuery();

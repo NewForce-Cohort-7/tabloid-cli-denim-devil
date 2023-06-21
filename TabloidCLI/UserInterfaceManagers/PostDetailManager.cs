@@ -11,8 +11,9 @@ namespace TabloidCLI.UserInterfaceManagers
         private BlogRepository _blogRepository;
         private PostRepository _postRepository;
         private TagRepository _tagRepository;
-        //private NoteRepository _noteRepository;
+        private NoteRepository _noteRepository;
         private int _postId;
+        private string _connectionString;
 
         public PostDetailManager(IUserInterfaceManager parentUI, string connectionString, int postId)
         {
@@ -20,8 +21,10 @@ namespace TabloidCLI.UserInterfaceManagers
             _postRepository = new PostRepository(connectionString);
             _tagRepository = new TagRepository(connectionString);
             _blogRepository = new BlogRepository(connectionString);
-            //_noteRepository = new NoteRepository(postId, connectionString);
+            _noteRepository = new NoteRepository(postId, connectionString);
             _postId = postId;
+            _connectionString = connectionString;
+
         }
 
         public IUserInterfaceManager Execute()
@@ -42,8 +45,8 @@ namespace TabloidCLI.UserInterfaceManagers
                     View();
                     return this;
                 case "2":
-                    ViewBlogPosts();
-                    return this;
+                    NoteManager noteManager = new NoteManager(this, _postId, _connectionString);
+                    return noteManager;
                 case "3":
                     AddTag();
                     return this;
