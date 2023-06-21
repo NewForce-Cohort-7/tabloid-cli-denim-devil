@@ -54,7 +54,7 @@ namespace TabloidCLI
                     cmd.CommandText = @"INSERT INTO Tag (Name)
                         Values (@Name)";
                     cmd.Parameters.AddWithValue("@Name", tag.Name);
-
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
