@@ -51,9 +51,10 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Tag (Name, Id)
-                        Values (@ Name, Id)";
+                    cmd.CommandText = @"INSERT INTO Tag (Name)
+                        Values (@Name)";
                     cmd.Parameters.AddWithValue("@Name", tag.Name);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
