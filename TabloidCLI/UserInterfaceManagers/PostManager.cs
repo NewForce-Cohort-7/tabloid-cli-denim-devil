@@ -68,11 +68,13 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void List()
         {
+            Console.WriteLine();
             List<Post> posts = _postRepository.GetAll();
             foreach (Post post in posts)
             {
-                Console.WriteLine(post);
+                Console.WriteLine(post.Title);
             }
+            Console.WriteLine();
         }
 
 
@@ -110,6 +112,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Add()
         {
+            Console.WriteLine();
             Console.WriteLine("New Post");
             Post post = new Post();
 
@@ -147,6 +150,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
             Console.WriteLine();
             Console.WriteLine("Post added successfully!");
+            Console.WriteLine();
         }
 
         private void Edit()
@@ -156,7 +160,15 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Remove()
         {
-            throw new NotImplementedException();
+            Console.WriteLine();
+            Post postToDelete = Choose("Which post would you like to remove?");
+            if (postToDelete != null)
+            {
+                _postRepository.Delete(postToDelete.Id);
+            }
+            Console.WriteLine();
+            Console.WriteLine("Post deleted successfully!");
+            Console.WriteLine();
         }
     }
 }
