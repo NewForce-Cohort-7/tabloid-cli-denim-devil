@@ -1,14 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using TabloidCLI.Models;
 
 namespace TabloidCLI.UserInterfaceManagers
 {
     public class TagManager : IUserInterfaceManager
     {
         private readonly IUserInterfaceManager _parentUI;
+        private TagRepository _tagRepository;
+
 
         public TagManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
+            _tagRepository = new TagRepository(connectionString);
+
         }
 
         public IUserInterfaceManager Execute()
@@ -46,12 +54,19 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void List()
         {
-            throw new NotImplementedException();
+            List<Tag> tags = _tagRepository.GetAll();
+            foreach (Tag tag in tags)
+            {
+                Console.WriteLine(tag);
+            }
         }
 
         private void Add()
         {
-            throw new NotImplementedException();
+            Console.Write("New Tag: ");
+            Tag tag = new Tag();
+
+            _tagRepository.Insert(tag);
         }
 
         private void Edit()
