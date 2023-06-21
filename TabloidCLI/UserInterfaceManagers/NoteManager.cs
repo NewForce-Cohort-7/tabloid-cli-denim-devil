@@ -41,7 +41,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     Console.WriteLine("Invalid Selection");
                     return this;
             }
-        }
+        } 
 
         private void List()
         {
