@@ -8,20 +8,18 @@ namespace TabloidCLI.UserInterfaceManagers
     internal class PostDetailManager : IUserInterfaceManager
     {
         private IUserInterfaceManager _parentUI;
-        //private BlogRepository _blogRepository;
+        private BlogRepository _blogRepository;
         private PostRepository _postRepository;
         private TagRepository _tagRepository;
         //private NoteRepository _noteRepository;
         private int _postId;
-        private string _connectionString;
 
         public PostDetailManager(IUserInterfaceManager parentUI, string connectionString, int postId)
         {
             _parentUI = parentUI;
-            _connectionString = connectionString;
             _postRepository = new PostRepository(connectionString);
             _tagRepository = new TagRepository(connectionString);
-            //_blogRepository = new BlogRepository(connectionString);
+            _blogRepository = new BlogRepository(connectionString);
             //_noteRepository = new NoteRepository(postId, connectionString);
             _postId = postId;
         }
@@ -44,7 +42,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     View();
                     return this;
                 case "2":
-                    //ViewBlogPosts();
+                    ViewBlogPosts();
                     return this;
                 case "3":
                     AddTag();
@@ -73,15 +71,15 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine();
         }
 
-        //private void ViewBlogPosts()
-        //{
-        //    List<Post> posts = _postRepository.GetByBlog(_postId);
-        //    foreach (Post post in posts)
-        //    {
-        //        Console.WriteLine(post);
-        //    }
-        //    Console.WriteLine();
-        //}
+        private void ViewBlogPosts()
+        {
+            List<Post> posts = _postRepository.GetByBlog(_postId);
+            foreach (Post post in posts)
+            {
+                Console.WriteLine(post);
+            }
+            Console.WriteLine();
+        }
 
         private void AddTag()
         {

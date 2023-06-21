@@ -77,7 +77,7 @@ namespace TabloidCLI
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("PostId")),
                                 Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Url = reader.GetString(reader.GetOrdinal("PostURL")),
+                                Url = reader.GetString(reader.GetOrdinal("Url")),
                             };
                         }
 
@@ -163,14 +163,14 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Post (Title, URL, PublishDateTime )
+                    cmd.CommandText = @"INSERT INTO Post (Title, URL, PublishDateTime, AuthorId, BlogId )
                                                      VALUES (@title, @url, @publishDateTime, @authorId, @blogId)";
                     cmd.Parameters.AddWithValue("@title", post.Title);
                     cmd.Parameters.AddWithValue("@url", post.Url);
                     cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
                     cmd.Parameters.AddWithValue("@authorId", post.Author.Id);
-                    cmd.Parameters.AddWithValue("@blogId", 1);
-                    // fix line 173
+                    cmd.Parameters.AddWithValue("@blogId", post.Blog.Id);
+                    
 
                     cmd.ExecuteNonQuery();
 
@@ -185,7 +185,24 @@ namespace TabloidCLI
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM PostTag WHERE PostId = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Post WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public List<Post> GetByBlog(int blogId)
