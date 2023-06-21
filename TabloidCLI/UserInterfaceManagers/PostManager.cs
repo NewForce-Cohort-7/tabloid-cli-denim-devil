@@ -155,7 +155,37 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Edit()
         {
-            throw new NotImplementedException();
+            Console.WriteLine();
+            Post postToEdit = Choose("Which post would you like to edit?");
+            if (postToEdit == null)
+            {
+                return;
+            }
+
+            Console.WriteLine();
+            Console.Write("New title (blank to leave unchanged): ");
+            string title = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                postToEdit.Title = title;
+            }
+            Console.Write("New URL (blank to leave unchanged): ");
+            string url = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                postToEdit.Url = url;
+            }
+            Console.Write("New publication date MM/DD/YYYY (blank to leave unchanged): ");
+            string date = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                postToEdit.PublishDateTime = DateTime.Parse(date);
+            }
+
+            _postRepository.Update(postToEdit);
+            Console.WriteLine();
+            Console.WriteLine("Post updated successfully!");
+            Console.WriteLine();
         }
 
         private void Remove()
