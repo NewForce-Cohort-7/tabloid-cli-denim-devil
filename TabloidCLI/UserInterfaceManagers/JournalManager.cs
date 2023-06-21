@@ -39,10 +39,10 @@ namespace TabloidCLI.UserInterfaceManagers
                 case "2":
                     Add();
                     return this;
-                case "4":
+                case "3":
                     Edit();
                     return this;
-                case "5":
+                case "4":
                     Remove();
                     return this;
                 case "0":
@@ -85,7 +85,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 int choice = int.Parse(input);
                 return journals[choice - 1];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine("Invalid Selection");
                 return null;

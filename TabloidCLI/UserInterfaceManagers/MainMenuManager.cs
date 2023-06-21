@@ -24,13 +24,8 @@ namespace TabloidCLI.UserInterfaceManagers
             string choice = Console.ReadLine();
             switch (choice)
             {
-<<<<<<< HEAD
                 case "1": return new JournalManager(this, CONNECTION_STRING);
-                case "2": throw new NotImplementedException();
-=======
-                case "1": throw new NotImplementedException();
                 case "2": return new BlogManager(this, CONNECTION_STRING);
->>>>>>> main
                 case "3": return new AuthorManager(this, CONNECTION_STRING);
                 case "4": return new PostManager(this, CONNECTION_STRING);
                 case "5": return new TagManager(this, CONNECTION_STRING);
