@@ -21,9 +21,9 @@ namespace TabloidCLI.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT id,
+                    cmd.CommandText = @"SELECT Id,
                                                Title,
-                                               TextContent,
+                                               Content
                                           FROM Journal";
 
                     List<Journal> journals = new List<Journal>();
@@ -59,9 +59,9 @@ namespace TabloidCLI.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Note (JournalId, Title, Content, CreateDateTime)
-                                                    VALUES (@journalId, @title, @content, @createDateTime)";
-                    cmd.Parameters.AddWithValue("@journalId", 1);
+                    cmd.CommandText = @"INSERT INTO Journal (Title, Content, CreateDateTime)
+                                                    VALUES (@title, @content, @createDateTime)";
+                    /*cmd.Parameters.AddWithValue("@journalId", journal.Id);*/
                     cmd.Parameters.AddWithValue("@title", journal.Title);
                     cmd.Parameters.AddWithValue("@content", journal.Content);
                     cmd.Parameters.AddWithValue("@createDateTime", DateTime.Now);
