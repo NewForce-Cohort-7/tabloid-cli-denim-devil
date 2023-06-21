@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿//using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -65,7 +65,8 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             Console.Write("New Tag: ");
             Tag tag = new Tag();
-
+           
+            tag.Name = Console.ReadLine();
             _tagRepository.Insert(tag);
         }
 
